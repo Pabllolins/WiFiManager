@@ -584,7 +584,7 @@ void WiFiManager::setupDNSD(){
 void WiFiManager::setupConfigPortal() {
 
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("Starting Web Portal"));
+  DEBUG_WM(F("Iniciando página AP"));
   #endif
 
   // setup dns and web servers
@@ -622,7 +622,7 @@ void WiFiManager::setupConfigPortal() {
   
   server->begin(); // Web server start
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("HTTP server started"));
+  DEBUG_WM(DEBUG_VERBOSE,F("Iniciando o modo servidor HTTP"));
   #endif
 
   if(_preloadwifiscan) WiFi_scanNetworks(true,true); // preload wifiscan , async
