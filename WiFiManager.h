@@ -8,6 +8,8 @@
  * @author tablatronix
  * @version 0.0.0
  * @license MIT
+ * 
+ * Co-author forked original repositorie: @Pabllolins
  */
 
 

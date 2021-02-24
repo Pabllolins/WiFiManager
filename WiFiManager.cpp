@@ -1,5 +1,5 @@
 /**
- * WiFiManager.cpp
+ * WiFiManager.h
  * 
  * WiFiManager, a library for the ESP8266/Arduino platform
  * for configuration of WiFi credentials using a Captive Portal
@@ -8,6 +8,8 @@
  * @author tablatronix
  * @version 0.0.0
  * @license MIT
+ * 
+ * Co-author forked original repositorie: @Pabllolins
  */
 
 #include "WiFiManager.h"
