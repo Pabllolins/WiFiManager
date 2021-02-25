@@ -271,7 +271,8 @@ boolean WiFiManager::autoConnect() {
  */
 boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("AutoConnect"));
+  //DEBUG_WM(F("AutoConnect"));
+	DEBUG_WM(F("Iniciando em Auto Conexão"));
   #endif
   if(getWiFiIsSaved()){
 
@@ -321,8 +322,8 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
     if(connected || connectWifi(_defaultssid, _defaultpass) == WL_CONNECTED){
       //connected
       #ifdef WM_DEBUG_LEVEL
-      DEBUG_WM(F("AutoConnect: SUCCESS"));
-      DEBUG_WM(F("STA IP Address:"),WiFi.localIP());
+      DEBUG_WM(F("Auto conexão: CONECTADO"));
+      DEBUG_WM(F("Endereço de IP modo STA: "),WiFi.localIP());
       #endif
       _lastconxresult = WL_CONNECTED;
 
@@ -344,7 +345,7 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
     }
 
     #ifdef WM_DEBUG_LEVEL
-    DEBUG_WM(F("AutoConnect: FAILED"));
+    DEBUG_WM(F("Auto Conexão: Falhou!"));
     #endif
   }
   else {
@@ -420,7 +421,7 @@ bool WiFiManager::setupHostname(bool restart){
 bool WiFiManager::startAP(){
   bool ret = true;
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("StartAP with SSID: "),_apName);
+  DEBUG_WM(F("Iniciando em modo AP com SSID: "),_apName);
   #endif
 
   #ifdef ESP8266
@@ -486,8 +487,10 @@ bool WiFiManager::startAP(){
   
   delay(500); // slight delay to make sure we get an AP IP
   #ifdef WM_DEBUG_LEVEL
-  if(!ret) DEBUG_WM(DEBUG_ERROR,F("[ERROR] There was a problem starting the AP"));
-  DEBUG_WM(F("AP IP address:"),WiFi.softAPIP());
+  //if(!ret) DEBUG_WM(DEBUG_ERROR,F("[ERROR] There was a problem starting the AP"));
+  if(!ret) DEBUG_WM(DEBUG_ERROR,F("[ERROR] Houve um problema ao iniciar o AP"));
+  //DEBUG_WM(F("AP IP address:"),WiFi.softAPIP());
+  DEBUG_WM(F("Endereço de IP do AP:"),WiFi.softAPIP());
   #endif
 
   // set ap hostname
@@ -539,7 +542,7 @@ boolean WiFiManager::configPortalHasTimeout(){
       if(millis() - timer > logintvl){
         timer = millis();
         #ifdef WM_DEBUG_LEVEL
-        DEBUG_WM(DEBUG_VERBOSE,F("NUM CLIENTS: "),(String)WiFi_softap_num_stations());
+        DEBUG_WM(DEBUG_VERBOSE,F("Clientes conectados: "),(String)WiFi_softap_num_stations());
         #endif
       }
       _configPortalStart = millis(); // kludge, bump configportal start time to skew timeouts
@@ -584,7 +587,7 @@ void WiFiManager::setupDNSD(){
 void WiFiManager::setupConfigPortal() {
 
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("Iniciando página AP"));
+  DEBUG_WM(F("Iniciando página web do modo AP"));
   #endif
 
   // setup dns and web servers
@@ -622,7 +625,7 @@ void WiFiManager::setupConfigPortal() {
   
   server->begin(); // Web server start
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Iniciando o modo servidor HTTP"));
+  DEBUG_WM(DEBUG_VERBOSE,F("Iniciando servidor HTTP..."));
   #endif
 
   if(_preloadwifiscan) WiFi_scanNetworks(true,true); // preload wifiscan , async
@@ -648,7 +651,8 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
   _apPassword = apPassword;
   
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Starting Config Portal"));
+  //DEBUG_WM(DEBUG_VERBOSE,F("Starting Config Portal"));
+  DEBUG_WM(DEBUG_VERBOSE,F("Iniciando a configuração de portal"));
   #endif
 
   if(_apName == "") _apName = getDefaultAPName();
@@ -662,7 +666,8 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
     WiFi_Disconnect();
     WiFi_enableSTA(false);
     #ifdef WM_DEBUG_LEVEL
-    DEBUG_WM(DEBUG_VERBOSE,F("Disabling STA"));
+    //DEBUG_WM(DEBUG_VERBOSE,F("Disabling STA"));
+    DEBUG_WM(DEBUG_VERBOSE,F("Disabilitando modo STATION"));
     #endif
   }
   else {
@@ -679,7 +684,7 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
 
   // start access point
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Enabling AP"));
+  DEBUG_WM(DEBUG_VERBOSE,F("Habilitando modo AP"));
   #endif
   startAP();
   WiFiSetCountry();
@@ -710,7 +715,8 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
   }
 
   #ifdef WM_DEBUG_LEVEL
-    DEBUG_WM(DEBUG_VERBOSE,F("Config Portal Running, blocking, waiting for clients..."));
+    //DEBUG_WM(DEBUG_VERBOSE,F("Config Portal Running, blocking, waiting for clients..."));
+  	DEBUG_WM(DEBUG_VERBOSE,F("Portal de configuração no ar, esperando clientes..."));
     if(_configPortalTimeout > 0) DEBUG_WM(DEBUG_VERBOSE,F("Portal Timeout In"),(String)(_configPortalTimeout/1000) + (String)F(" seconds"));
   #endif
 
@@ -739,7 +745,8 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
   }
 
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_NOTIFY,F("config portal exiting"));
+  //DEBUG_WM(DEBUG_NOTIFY,F("config portal exiting"));
+  DEBUG_WM(DEBUG_NOTIFY,F("Fechando portal de configurações"));
   #endif
   return result;
 }
@@ -902,10 +909,12 @@ bool WiFiManager::shutdownConfigPortal(){
 // clean up, flow is convoluted, and causes bugs
 uint8_t WiFiManager::connectWifi(String ssid, String pass) {
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Connecting as wifi client..."));
+  //DEBUG_WM(DEBUG_VERBOSE,F("Connecting as wifi client..."));
+	DEBUG_WM(DEBUG_VERBOSE,F("Conectando como cliente ao AP..."));
   #endif
   uint8_t retry = 1;
   uint8_t connRes = (uint8_t)WL_NO_SSID_AVAIL;
+  //uint8_t connRes = (uint8_t)SEM_SSID_NA_MEMORIA;
 
   setSTAConfig();
   //@todo catch failures in set_config
@@ -939,13 +948,14 @@ uint8_t WiFiManager::connectWifi(String ssid, String pass) {
     }
     else {
       #ifdef WM_DEBUG_LEVEL
-      DEBUG_WM(F("No wifi saved, skipping"));
+      //DEBUG_WM(F("No wifi saved, skipping"));
+    	DEBUG_WM(F("Não há uma rede cadastrada para se conectar, pulando etapa..."));
       #endif
     }
   }
 
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Connection result:"),getWLStatusString(connRes));
+  DEBUG_WM(DEBUG_VERBOSE,F("Resulatdo da conexão:"),getWLStatusString(connRes));
   #endif
   retry++;
 }
@@ -978,9 +988,10 @@ uint8_t WiFiManager::connectWifi(String ssid, String pass) {
 bool WiFiManager::wifiConnectNew(String ssid, String pass){
   bool ret = false;
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("CONNECTED:"),WiFi.status() == WL_CONNECTED);
+  //DEBUG_WM(F("CONNECTED:"),WiFi.status() == WL_CONNECTED);
+  DEBUG_WM(F("Conectado:"),WiFi.status() == WL_CONNECTED);
   DEBUG_WM(F("Connecting to NEW AP:"),ssid);
-  DEBUG_WM(DEBUG_DEV,F("Using Password:"),pass);
+  //DEBUG_WM(DEBUG_DEV,F("Using Password:"),pass); //retirado possibilidade de imprimir na serial a senha do AP
   #endif
   WiFi_enableSTA(true,storeSTAmode); // storeSTAmode will also toggle STA on in default opmode (persistent) if true (default)
   WiFi.persistent(true);
@@ -1056,7 +1067,8 @@ bool WiFiManager::setSTAConfig(){
     #endif
   } else {
     #ifdef WM_DEBUG_LEVEL
-      DEBUG_WM(DEBUG_VERBOSE,F("setSTAConfig static ip not set, skipping"));
+      //DEBUG_WM(DEBUG_VERBOSE,F("setSTAConfig static ip not set, skipping"));
+  		DEBUG_WM(DEBUG_VERBOSE,F("IP estático do modo STA não configurado, pulando etapa..."));
       #endif
   }
   return ret;
@@ -3017,7 +3029,8 @@ void WiFiManager::DEBUG_WM(wm_debuglevel_t level,Generic text,Genericb textb) {
     _debugPort.printf("[MEM] free: %5d | max: %5d | frag: %3d%% \n", free, max, frag);    
     #endif
   }
-  _debugPort.print("*WM: ");
+  //_debugPort.print("*WM: ");
+  _debugPort.print("WiFi-Manager_msg: ");
   if(_debugLevel >= debugLvlShow) _debugPort.print("["+(String)level+"] ");
   _debugPort.print(text);
   if(textb){
@@ -3141,14 +3154,16 @@ boolean WiFiManager::validApPassword(){
   if (_apPassword != "") {
     if (_apPassword.length() < 8 || _apPassword.length() > 63) {
     #ifdef WM_DEBUG_LEVEL
-      DEBUG_WM(F("AccessPoint set password is INVALID or <8 chars"));
+      //DEBUG_WM(F("AccessPoint set password is INVALID or <8 chars"));
+    	DEBUG_WM(F("Senha do AccessPoint inválida ou menor que 8 caracteres"));
       #endif
       _apPassword = "";
       return false; // @todo FATAL or fallback to empty ?
     }
     #ifdef WM_DEBUG_LEVEL
-    DEBUG_WM(DEBUG_VERBOSE,F("AccessPoint set password is VALID"));
-    DEBUG_WM(DEBUG_DEV,"ap pass",_apPassword);
+    //DEBUG_WM(DEBUG_VERBOSE,F("AccessPoint set password is VALID"));
+    DEBUG_WM(DEBUG_VERBOSE,F("AccessPoint com senha!"));
+    //DEBUG_WM(DEBUG_DEV,"ap pass",_apPassword); // retirada opção de imprimir a senha do AP
     #endif
   }
   return true;
@@ -3472,7 +3487,8 @@ void WiFiManager::WiFi_autoReconnect(){
     // if(_wifiAutoReconnect){
       // @todo move to seperate method, used for event listener now
       #ifdef WM_DEBUG_LEVEL
-      DEBUG_WM(DEBUG_VERBOSE,F("ESP32 event handler enabled"));
+      //DEBUG_WM(DEBUG_VERBOSE,F("ESP32 event handler enabled"));
+    	DEBUG_WM(DEBUG_VERBOSE,F("Manipulador de eventos do ESP32 habilitado"));
       #endif
       using namespace std::placeholders;
       wm_event_id = WiFi.onEvent(std::bind(&WiFiManager::WiFiEvent,this,_1,_2));
