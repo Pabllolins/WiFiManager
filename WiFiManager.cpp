@@ -173,7 +173,7 @@ bool WiFiManager::addParameter(WiFiManagerParameter *p) {
   _paramsCount++;
   
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(DEBUG_VERBOSE,F("Added Parameter:"),p->getID());
+  DEBUG_WM(DEBUG_VERBOSE,F("Parametro adicionado:"),p->getID());
   #endif
   return true;
 }
