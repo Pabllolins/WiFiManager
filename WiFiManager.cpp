@@ -1012,7 +1012,7 @@ bool WiFiManager::wifiConnectDefault(){
   bool ret = false;
 
   #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("Connecting to SAVED AP:"),WiFi_SSID(true));
+  DEBUG_WM(F("Conectando ao AP salvo na memória:"),WiFi_SSID(true));
   DEBUG_WM(DEBUG_DEV,F("Using Password:"),WiFi_psk(true));
   #endif
 
